@@ -41,6 +41,7 @@ type Cacher struct {
 	dir    string
 	stores map[string]*CacheStore
 	mu     sync.Mutex
+	ext    string
 }
 
 type cacheItem struct {
@@ -53,6 +54,16 @@ func NewCacher(dir string) (*Cacher, error) {
 	return &Cacher{
 		stores: make(map[string]*CacheStore),
 		dir:    dir,
+		ext:    Ext,
+	}, nil
+}
+
+func NewCacherWithExt(dir, ext string) (*Cacher, error) {
+	_ = os.MkdirAll(dir, os.ModePerm)
+	return &Cacher{
+		stores: make(map[string]*CacheStore),
+		dir:    dir,
+		ext:    ext,
 	}, nil
 }
 
