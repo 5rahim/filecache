@@ -87,7 +87,7 @@ func (c *Cacher) getStore(name string) (*CacheStore, error) {
 	store, ok := c.stores[name]
 	if !ok {
 		store = &CacheStore{
-			filePath: filepath.Join(c.dir, name+".cache"),
+			filePath: filepath.Join(c.dir, name+c.ext),
 			data:     make(map[string]*cacheItem),
 		}
 		if err := store.loadFromFile(); err != nil {
@@ -245,7 +245,7 @@ func (c *Cacher) RemoveBucket(bucketName string) error {
 	if _, ok := c.stores[bucketName]; ok {
 		delete(c.stores, bucketName)
 	}
-	_ = os.Remove(filepath.Join(c.dir, bucketName+Ext))
+	_ = os.Remove(filepath.Join(c.dir, bucketName+c.ext))
 	return nil
 }
 
@@ -342,7 +342,7 @@ func (c *Cacher) RemoveAllBy(filter func(filename string) bool) error {
 			return err
 		}
 		if !info.IsDir() {
-			if !strings.HasSuffix(info.Name(), Ext) {
+			if !strings.HasSuffix(info.Name(), c.ext) {
 				return nil
 			}
 			if filter(info.Name()) {
